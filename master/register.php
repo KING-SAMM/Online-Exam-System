@@ -46,7 +46,7 @@
                         Admin Registartion
                     </div>
                     <div class="card-body">
-                        <form action="post" id="admin_register_form">
+                        <form method="post" id="admin_register_form">
                             <div class="form-group">
                                 <label for="admin_email">Enter Email</label>
                                 <input type="text" name="admin_email" id="admin_email" class="form-control" data-parslet-checkemail data-parslet-checkemail-message="Email already exists">
@@ -101,6 +101,49 @@
 
             // Initialize form validation library (Parsley)  on form
             $("#admin_register_form").parsley();
+
+
+            $('#admin_register_form').on('submit', function(event){
+
+                event.preventDefault();
+
+                $('#admin_email_address').attr('required', 'required');
+
+                $('#admin_email_address').attr('data-parsley-type', 'email');
+
+                $('#admin_password').attr('required', 'required');
+
+                $('#confirm_admin_password').attr('required', 'required');
+
+                $('#confirm_admin_password').attr('data-parsley-equalto', '#admin_password');
+
+                if($('#admin_register_form').parsley().isValid())
+                {
+                    $.ajax({
+                        url:"ajax_action.php",
+                        method:"POST",
+                        data:$(this).serialize(),
+                        dataType:"json",
+                        beforeSend:function(){
+                        $('#admin_register').attr('disabled', 'disabled');
+                        $('#admin_register').val('please wait...');
+                        },
+                        success:function(data)
+                        {
+                            if(data.success)
+                            {
+                                $('#message').html('<div class="alert alert-success">Please check your email</div>');
+                                $('#admin_register_form')[0].reset();
+                                $('#admin_register_form').parsley().reset();
+                            }
+
+                            $('#admin_register').attr('disabled', false);
+                            $('#admin_register').val('Register');
+                        }
+                    });
+                }
+
+            });
         });
     </script>
 </body>

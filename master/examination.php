@@ -38,7 +38,41 @@ class Examination
 		return $this->statement->rowCount();
 	}
 
-	
+	function send_email($receiver_email, $subject, $body)
+	{
+		$mail = new PHPMailer;
+
+		$mail->IsSMTP();
+
+		$mail->Host = 'smtp.gmail.com';
+
+		$mail->Port = '587';
+
+		$mail->SMTPAuth = true;
+
+		$mail->Username = '';
+
+		$mail->Password = '';
+
+		$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+		$mail->From = 'sender email';
+
+		$mail->FromName = 'KC Samm';
+
+        $mail->AddAddress($receiver_email, '');
+        
+        $mail->addAddress('another receiver email');
+
+		$mail->IsHTML(true);
+
+		$mail->Subject = $subject;
+
+		$mail->Body = $body;
+
+		$mail->Send();		
+	}
+    
 }
 
 ?>
